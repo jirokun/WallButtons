@@ -1,58 +1,70 @@
-const gpio = require('rpi-gpio');
+const Gpio = require('pigpio').Gpio;
 const bgmPlayer = require('play-sound')(opts = { player: 'mpg123' });
 const { play } = require('./util.js');
 
 const LED_PINS = [
+  2,
   3,
-  5,
-  7,
+  4,
+  17,
+  27,
+  22,
+  10,
+  9,
   11,
-  13,
-  15,
-  19,
-  21,
-  23,
-  29
+  0
 ];
 const SWITCH_PINS = [
-  10,
-  12,
-  16,
+  15,
   18,
-  22,
+  23,
   24,
-  26,
-  28,
-  32,
-  36,
-  38
+  25,
+  8,
+  7,
+  1,
+  12,
+  16
 ];
 class Game {
-  constructor() {
+  constructor(io) {
+    this.io = io;
     this.onChange = this._onChange.bind(this);
     this.lastChangedTimes = {};
     this.lastValues = {};
     this.bgmFile = null;
     this.bgmPlayerProcess = null;
     this.isBgmContinue = true;
+    this.buttons = [];
+    this.leds = [];
+  }
+  emitState() {
+    this.io.emit('state', this.state);
   }
   start() {
     LED_PINS.forEach(pin => {
-      gpio.setup(pin, gpio.DIR_OUT);
-      console.log(`SETUP ${pin}`);
+      const led = new Gpio(pin, { mode: Gpio.OUTPUT });
+      led.digitalWrite(0);
+      this.leds.push(led);
     });
     SWITCH_PINS.forEach(pin => {
-      gpio.setup(pin, gpio.DIR_IN, gpio.EDGE_FALLING);
+      const button = new Gpio(pin, {
+        mode: Gpio.INPUT,
+        pullUpDown: Gpio.PUD_UP,
+        alert: true
+      });
+      button.glitchFilter(10000);
+      button.on('alert', this.onChange);
+      this.buttons.push(button);
       console.log(`SETUP ${pin}`);
     });
-    gpio.on('change', this.onChange);
     this.playBgm();
     return new Promise((resolve) => {
       this.resolve = resolve;
     });
   }
   end() {
-    gpio.off('change', this.onChange);
+    this.destroyEvent();
     this.stopBgm();
     this.resolve();
   }
@@ -60,6 +72,9 @@ class Game {
     while (this.isBgmContinue) {
       await play(this.bgmFile);
     }
+  }
+  destroyEvent() {
+    this.buttons.forEach(button => button.off('alert', this.onChange));
   }
   stopBgm() {
     if (this.bgmPlayerProcess) this.bgmPlayerProcess.kill();
@@ -71,16 +86,9 @@ class Game {
   getSwitchPin(index) {
     return SWITCH_PINS[index];
   }
-  _onChange(channel, value) {
-    const now = new Date().getTime();
-    const lastChangedTime = this.lastChangedTimes[channel];
-    this.lastChangedTimes[channel] = now;
-    if (isNaN(lastChangedTime) || now - lastChangedTime < 500) return;
-    const lastValue = this.lastValues[channel];
-    if (lastValue) {
-      this.onPushed(channel);
-    }
-    this.lastValues[channel] = value;
+  _onChange(level) {
+    if (level !== 0) return;
+    this.onPushed();
   }
   onPushed(channel){
     // please override
