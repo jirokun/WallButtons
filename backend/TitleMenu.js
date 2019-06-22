@@ -23,6 +23,8 @@ class TitleMenu extends Game {
 
   onPushed(pin) {
     play('assets/sound/button25.wav');
+    this.state.mode = 'MENU_LIST';
+    this.emitState();
   }
 }
 
