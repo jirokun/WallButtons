@@ -1,7 +1,11 @@
 <template>
   <div>
+    <img src="http://192.168.1.111:3000/img/royal_king_gyokuza.png"/>
     <div v-if="mode === 'WAIT_PUSH_BUTTON'" class="title-message">
-      ボタンを押してね
+      ぼたんを おしてね
+    </div>
+    <div v-if="mode === 'MENU_LIST'" class="title-message">
+      どれで あそぶ？
     </div>
   </div>
 </template>
@@ -33,6 +37,8 @@ export default {
 
 <style lang="scss" scoped>
 .title-message {
+  display: inline-block;
+  vertical-align: top;
   font-size: 64px;
 }
 </style>
