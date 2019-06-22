@@ -38,8 +38,12 @@ class Game {
     this.buttons = [];
     this.leds = [];
   }
-  emitState() {
-    this.io.emit('state', this.state);
+  emitState(socket) {
+    if (socket) {
+      socket.emit('state', this.state);
+    } else {
+      this.io.emit('state', this.state);
+    }
   }
   start() {
     LED_PINS.forEach(pin => {

@@ -1,22 +1,23 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const gpio = require('rpi-gpio')
-const gpiop = gpio.promise;
 const player = require('play-sound')(opts = { player: 'mpg123' })
-const Menu = require('./Menu.js');
+const TitleMenu = require('./TitleMenu.js');
 
-let game = new Menu(io);
+let game = new TitleMenu(io);
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
 	  res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
   console.log('a user connected');
-  game.emitState();
-  socket.on('disconnect', function(){
+  socket.emit('game', game.constructor.name);
+  socket.on('disconnect', function() {
     console.log('user disconnected');
+  });
+  socket.on('requestState', function(socket) {
+    game.emitState(socket);
   });
 });
 
