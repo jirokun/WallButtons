@@ -14,3 +14,10 @@ module.exports.play = async function play(file) {
     }
   });
 }
+module.exports.wait = async function wait(msec) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, msec);
+  });
+}

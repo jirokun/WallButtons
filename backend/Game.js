@@ -30,6 +30,7 @@ class Game {
   constructor(io) {
     this.io = io;
     this.onChange = this._onChange.bind(this);
+    this.onKeydown = this._onKeydown.bind(this);
     this.lastChangedTimes = {};
     this.lastValues = {};
     this.bgmFile = null;
@@ -85,10 +86,13 @@ class Game {
     this.isBgmContinue = false;
   }
   getLedPin(index) {
-    return LED_PINS[index];
+    return this.leds[index];
   }
   getSwitchPin(index) {
     return SWITCH_PINS[index];
+  }
+  _onKeydown(channel) {
+    this.onPushed(channel);
   }
   _onChange(level) {
     if (level !== 0) return;

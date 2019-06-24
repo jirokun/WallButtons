@@ -21,6 +21,9 @@ io.on('connection', function(socket) {
   socket.on('requestState', function(socket) {
     game.emitState(socket);
   });
+  socket.on('keydown', index => {
+    game.onKeydown(index);
+  });
 });
 
 http.listen(3000, function(){
