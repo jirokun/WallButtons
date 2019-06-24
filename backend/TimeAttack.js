@@ -1,22 +1,19 @@
-const Game = require('./game.js');
-const gpio = require('rpi-gpio')
-const gpiop = gpio.promise;
-
+const Game = require('./Game.js');
+const { wait, play } = require('./util.js');
 const GAME_TIME = 5; // seconds
 
 class TimeAttack extends Game {
-  constructor() {
-    this.bgmFile = 'assets/bgm/game_maoudamashii_5_town15.mp3';
-  }
-
-  start() {
-    super.start();
-
+  constructor(io) {
+    super(io);
+    this.bgmFile = 'assets/bgm/tw045_volume.mp3';
     this.state = {
-      mode: 'GAME',
       remainSeconds: GAME_TIME,
       score: 0,
+      mode: 'PLAYING',
     };
+  }
+
+  init() {
     this.startTime = new Date().getTime();
     this.seconds = 0;
     this.timer = setInterval(async () => {
@@ -25,9 +22,10 @@ class TimeAttack extends Game {
       if (this.seconds !== seconds) {
         if (GAME_TIME === seconds) {
           clearInterval(this.timer);
+          this.state.remainSeconds = GAME_TIME - seconds;
           this.state.mode = 'SHOW_SCORE';
           this.emitState();
-          await wait(5000);
+          await this.waitForAnyButtonPushed();
           this.end();
         }
         this.seconds = seconds;
@@ -36,13 +34,13 @@ class TimeAttack extends Game {
       }
     }, 100);
   }
-  end() {
-    super.end();
+  destroy() {
+    super.destroy();
     clearInterval(this.timer);
   }
 
   onPushed(pin) {
-    this.player.play('assets/sound/se_maoudamashii_system46.wav');
+    play('assets/sound/button25.wav');
     this.state.score++;
     this.emitState();
   }

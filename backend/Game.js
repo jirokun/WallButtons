@@ -1,36 +1,12 @@
-const Gpio = require('pigpio').Gpio;
-const bgmPlayer = require('play-sound')(opts = { player: 'mpg123' });
-const { play } = require('./util.js');
+const Gpio = require("pigpio").Gpio;
+const { playBgm, stopBgm } = require("./util.js");
 
-const LED_PINS = [
-  2,
-  3,
-  4,
-  17,
-  27,
-  22,
-  10,
-  9,
-  11,
-  0
-];
-const SWITCH_PINS = [
-  15,
-  18,
-  23,
-  24,
-  25,
-  8,
-  7,
-  1,
-  12,
-  16
-];
+const LED_PINS = [2, 3, 4, 17, 27, 22, 10, 9, 11, 0];
+const SWITCH_PINS = [15, 18, 23, 24, 25, 8, 7, 1, 12, 16];
 class Game {
   constructor(io) {
     this.io = io;
     this.onChange = this._onChange.bind(this);
-    this.onKeydown = this._onKeydown.bind(this);
     this.lastChangedTimes = {};
     this.lastValues = {};
     this.bgmFile = null;
@@ -41,12 +17,12 @@ class Game {
   }
   emitState(socket) {
     if (socket) {
-      socket.emit('state', this.state);
+      socket.emit("state", this.state);
     } else {
-      this.io.emit('state', this.state);
+      this.io.emit("state", this.state);
     }
   }
-  start() {
+  async start() {
     LED_PINS.forEach(pin => {
       const led = new Gpio(pin, { mode: Gpio.OUTPUT });
       led.digitalWrite(0);
@@ -59,31 +35,43 @@ class Game {
         alert: true
       });
       button.glitchFilter(10000);
-      button.on('alert', this.onChange);
+      button.on("alert", this.onChange);
       this.buttons.push(button);
       console.log(`SETUP ${pin}`);
     });
     this.playBgm();
-    return new Promise((resolve) => {
+    this.emitState();
+    return new Promise(resolve => {
+      this.init();
       this.resolve = resolve;
     });
   }
-  end() {
-    this.destroyEvent();
-    this.stopBgm();
-    this.resolve();
+  init() {
+    // please override
+  }
+  end(nextGame = null) {
+    this.resolve(nextGame);
   }
   async playBgm() {
     while (this.isBgmContinue) {
-      await play(this.bgmFile);
+      await playBgm(this.bgmFile);
     }
   }
+  destroy() {
+    this.destroyEvent();
+    this.stopBgm();
+  }
   destroyEvent() {
-    this.buttons.forEach(button => button.off('alert', this.onChange));
+    this.buttons.forEach(button => button.off("alert", this.onChange));
   }
   stopBgm() {
-    if (this.bgmPlayerProcess) this.bgmPlayerProcess.kill();
+    stopBgm();
     this.isBgmContinue = false;
+  }
+  async waitForAnyButtonPushed() {
+    return new Promise(resolve => {
+      this.waitForAnyButtonPressResolve = resolve;
+    });
   }
   getLedPin(index) {
     return this.leds[index];
@@ -91,14 +79,16 @@ class Game {
   getSwitchPin(index) {
     return SWITCH_PINS[index];
   }
-  _onKeydown(channel) {
+  onKeydown(channel) {
+    if (this.waitForAnyButtonPressResolve) this.waitForAnyButtonPressResolve();
     this.onPushed(channel);
   }
   _onChange(level) {
     if (level !== 0) return;
+    if (this.waitForAnyButtonPressResolve) this.waitForAnyButtonPressResolve();
     this.onPushed();
   }
-  onPushed(channel){
+  onPushed(channel) {
     // please override
   }
 }

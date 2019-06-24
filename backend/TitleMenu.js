@@ -23,21 +23,18 @@ class TitleMenu extends Game {
     }, 1000);
   }
 
-  start() {
-    super.start();
-    this.emitState();
-  }
-  end(nextGame) {
+  destroy() {
+    super.destroy();
     clearInterval(this.timer);
     clearInterval(this.ledTimer);
-    super.end(nextGame);
   }
 
   onPushed(pin) {
     if (pin === 0) this.state.selected++;
     else if (pin === 1) this.state.selected--;
     else if (pin === 2) {
-      this.end();
+      this.end(new GAMES[this.state.selected].game(this.io));
+      return;
     }
     else return;
 

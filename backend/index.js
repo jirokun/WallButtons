@@ -31,8 +31,15 @@ http.listen(3000, function(){
 });
 
 (async () => {
-  console.log('START');
-  await game.start();
-  console.log('END');
+  while(true) {
+    console.log('START');
+    const nextGame = await game.start();
+    console.log('DESTROY');
+    game.destroy();
+    if (nextGame) game = nextGame;
+    else game = new TitleMenu(io);
+    io.emit('game', game.constructor.name);
+    console.log('END');
+  }
 })();
 
