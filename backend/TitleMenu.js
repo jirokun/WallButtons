@@ -1,25 +1,30 @@
 const Game = require('./Game.js');
 const TimeAttack = require('./TimeAttack.js');
+const Debug = require('./Debug.js');
 const { play } = require('./util.js');
 
 const GAME_TIME = 5; // seconds
 const GAMES = [
-  { game: TimeAttack, title: '30びょう タイムアタック' }
+  { game: TimeAttack, title: '30びょう タイムアタック' },
+  { game: Debug, title: 'デバッグ用' }
 ];
 
 class TitleMenu extends Game {
-  constructor(io) {
-    super(io);
+  constructor(io, buttons, leds) {
+    super(io, buttons, leds);
     this.bgmFile = 'assets/bgm/game_maoudamashii_5_town15_volume.mp3';
     this.state = {
       selected: 0,
       games: GAMES
     };
+  }
+  init() {
     this.startLedState = 0;
     this.ledTimer = setInterval(() => {
-      const led = this.getLedPin(0);
       this.startLedState = this.startLedState === 0 ? 1 : 0;
-      led.digitalWrite(this.startLedState);
+      this.getLedPin(0).digitalWrite(this.startLedState);
+      this.getLedPin(1).digitalWrite(this.startLedState);
+      this.getLedPin(2).digitalWrite(this.startLedState);
     }, 1000);
   }
 
@@ -30,10 +35,10 @@ class TitleMenu extends Game {
   }
 
   onPushed(pin) {
-    if (pin === 0) this.state.selected++;
-    else if (pin === 1) this.state.selected--;
-    else if (pin === 2) {
-      this.end(new GAMES[this.state.selected].game(this.io));
+    if (pin === 2) this.state.selected++;
+    else if (pin === 0) this.state.selected--;
+    else if (pin === 1) {
+      this.end(new GAMES[this.state.selected].game(this.io, this.buttons, this.leds));
       return;
     }
     else return;

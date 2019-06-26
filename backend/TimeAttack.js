@@ -1,19 +1,21 @@
 const Game = require('./Game.js');
 const { wait, play } = require('./util.js');
-const GAME_TIME = 5; // seconds
+const GAME_TIME = 10; // seconds
 
 class TimeAttack extends Game {
-  constructor(io) {
-    super(io);
+  constructor(io, buttons, leds) {
+    super(io, buttons, leds);
     this.bgmFile = 'assets/bgm/tw045_volume.mp3';
     this.state = {
       remainSeconds: GAME_TIME,
       score: 0,
       mode: 'PLAYING',
+      nextIndex: this.getNextIndex()
     };
   }
 
   init() {
+    this.getLedPin(this.state.nextIndex).digitalWrite(1);
     this.startTime = new Date().getTime();
     this.seconds = 0;
     this.timer = setInterval(async () => {
@@ -22,9 +24,12 @@ class TimeAttack extends Game {
       if (this.seconds !== seconds) {
         if (GAME_TIME === seconds) {
           clearInterval(this.timer);
+          this.clearLeds();
           this.state.remainSeconds = GAME_TIME - seconds;
           this.state.mode = 'SHOW_SCORE';
+          this.stopBgm();
           this.emitState();
+          await play('assets/sound/st025_volume.mp3');
           await this.waitForAnyButtonPushed();
           this.end();
         }
@@ -41,8 +46,20 @@ class TimeAttack extends Game {
 
   onPushed(pin) {
     play('assets/sound/button25.wav');
+    if (this.state.mode !== 'PLAYING') return;
+    if (pin !== this.state.nextIndex) return;
+    this.getLedPin(this.state.nextIndex).digitalWrite(0);
+    this.state.nextIndex = this.getNextIndex();
+    this.getLedPin(this.state.nextIndex).digitalWrite(1);
     this.state.score++;
     this.emitState();
+  }
+
+  getNextIndex() {
+    while (true) {
+      const nextIndex = Math.floor(Math.random() * 10);
+      if (!this.state || (this.state.nextIndex !== nextIndex)) return nextIndex;
+    }
   }
 }
 
