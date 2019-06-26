@@ -2,18 +2,21 @@
   <div>
     <title-menu v-if="game === 'TitleMenu'" :socket="socket"/>
     <time-attack v-else-if="game === 'TimeAttack'" :socket="socket"/>
+    <debug v-else-if="game === 'Debug'" :socket="socket"/>
   </div>
 </template>
 
 <script>
 import TitleMenu from '~/components/TitleMenu.vue'
 import TimeAttack from '~/components/TimeAttack.vue'
+import Debug from '~/components/Debug.vue'
 import io from 'socket.io-client'
 
 export default {
   components: {
     TitleMenu,
-    TimeAttack
+    TimeAttack,
+    Debug
   },
   mounted() {
     this._socket = io('http://192.168.1.111:3000')
@@ -38,7 +41,8 @@ export default {
   methods: {
     onKeydown(evt) {
       let index = evt.keyCode - 49
-      if (index === -1) index = 10
+      if (index === -1) index = 9
+      if (index < -1 || index > 9) return
       this.socket.emit('keydown', index)
     },
     onGameChange(game) {

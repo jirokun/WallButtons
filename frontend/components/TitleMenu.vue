@@ -32,11 +32,9 @@ export default {
   mounted() {
     this.socket.on('state', this.onStateChange)
     this.socket.emit('requestState')
-    document.addEventListener('keydown', this.onKeydown)
   },
   beforeDestroy() {
     this.socket.off('state', this.onStateChange)
-    document.removeEventListener('keydown', this.onKeydown)
   },
   data() {
     return {
