@@ -31,7 +31,8 @@ class TimeAttack extends Game {
           this.state.mode = 'SHOW_SCORE';
           this.stopBgm();
           this.emitState();
-          await play('assets/sound/st025_volume.mp3');
+          //await play('assets/sound/st025_volume.mp3');
+          await play('assets/sound/draw.mp3');
           await this.waitForAnyButtonPushed();
           this.end();
         }

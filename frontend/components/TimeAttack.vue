@@ -1,6 +1,9 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs12>
+    <v-flex xs4>
+      <img src="/img/minotauros.png" class="charactor">
+    </v-flex>
+    <v-flex xs8>
       <table>
         <tr>
           <th>スコア</th>

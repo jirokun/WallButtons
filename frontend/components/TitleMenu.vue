@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <v-flex xs4>
-      <img src="http://192.168.1.111:3000/img/royal_king_gyokuza.png" class="charactor">
+      <img src="/img/royal_king_gyokuza.png" class="charactor">
     </v-flex>
     <v-flex xs8>
       <h1 class="display-3">どれで あそぶ？</h1>
