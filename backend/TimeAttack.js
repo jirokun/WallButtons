@@ -1,6 +1,6 @@
 const Game = require('./Game.js');
 const { wait, play } = require('./util.js');
-const GAME_TIME = 10; // seconds
+const GAME_TIME = 3; // seconds
 
 class TimeAttack extends Game {
   constructor(io, buttons, leds) {
@@ -21,11 +21,13 @@ class TimeAttack extends Game {
     this.timer = setInterval(async () => {
       const now = new Date().getTime();
       const seconds = parseInt((now - this.startTime) / 1000);
+      const remainSeconds = GAME_TIME - seconds;
       if (this.seconds !== seconds) {
         if (GAME_TIME === seconds) {
+          play('assets/sound/info-girl1-zero1.mp3');
           clearInterval(this.timer);
           this.clearLeds();
-          this.state.remainSeconds = GAME_TIME - seconds;
+          this.state.remainSeconds = remainSeconds;
           this.state.mode = 'SHOW_SCORE';
           this.stopBgm();
           this.emitState();
@@ -33,6 +35,16 @@ class TimeAttack extends Game {
           await this.waitForAnyButtonPushed();
           this.end();
         }
+        if (remainSeconds === 10) play('assets/sound/info-girl1-zyuu1.mp3');
+        if (remainSeconds === 9) play('assets/sound/info-girl1-kyuu1.mp3');
+        if (remainSeconds === 8) play('assets/sound/info-girl1-hachi1.mp3');
+        if (remainSeconds === 7) play('assets/sound/info-girl1-nana1.mp3');
+        if (remainSeconds === 6) play('assets/sound/info-girl1-roku1.mp3');
+        if (remainSeconds === 5) play('assets/sound/info-girl1-go1.mp3');
+        if (remainSeconds === 4) play('assets/sound/info-girl1-yon1.mp3');
+        if (remainSeconds === 3) play('assets/sound/info-girl1-san1.mp3');
+        if (remainSeconds === 2) play('assets/sound/info-girl1-ni1.mp3');
+        if (remainSeconds === 1) play('assets/sound/info-girl1-ichi1.mp3');
         this.seconds = seconds;
         this.state.remainSeconds = GAME_TIME - seconds;
         this.emitState();
