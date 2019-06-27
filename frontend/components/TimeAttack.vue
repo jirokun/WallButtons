@@ -46,15 +46,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title-message {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 64px;
+th {
+  text-align: right;
+  padding-right: 10px;
 }
-.charactor {
-  width: 100%;
-}
-.selected {
-  background-color: #2196f3;
+* {
+  font-size: 38pt;
 }
 </style>

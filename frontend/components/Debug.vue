@@ -3,14 +3,15 @@
     <v-flex xs12>
       <table>
         <tr>
-          <th>LED</th>
+          <th>LIGHTEN LED</th>
           <td>{{ enabledLedPinIndex }}</td>
         </tr>
         <tr>
-          <th>PUSHED PIN</th>
+          <th>PUSHED BUTTON</th>
           <td>{{ pushedPinIndex }}</td>
         </tr>
       </table>
+      <div>0番のボタンを2回連続で押すとメニューに戻れます。</div>
     </v-flex>
   </v-layout>
 </template>
@@ -47,15 +48,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title-message {
-  display: inline-block;
-  vertical-align: top;
-  font-size: 64px;
+th {
+  text-align: right;
+  padding-right: 10px;
 }
-.charactor {
-  width: 100%;
-}
-.selected {
-  background-color: #2196f3;
+* {
+  font-size: 38pt;
 }
 </style>
