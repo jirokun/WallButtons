@@ -1,6 +1,6 @@
 const Game = require('./Game.js');
 const { wait, play } = require('./util.js');
-const GAME_TIME = 3; // seconds
+const GAME_TIME = 30; // seconds
 
 class TimeAttack extends Game {
   constructor(io, buttons, leds) {
@@ -58,9 +58,12 @@ class TimeAttack extends Game {
   }
 
   onPushed(pin) {
-    play('assets/sound/button25.wav');
     if (this.state.mode !== 'PLAYING') return;
-    if (pin !== this.state.nextIndex) return;
+    if (pin !== this.state.nextIndex) {
+      play('assets/sound/button62.mp3');
+      return;
+    }
+    play('assets/sound/button25.wav');
     this.getLedPin(this.state.nextIndex).digitalWrite(0);
     this.state.nextIndex = this.getNextIndex();
     this.getLedPin(this.state.nextIndex).digitalWrite(1);

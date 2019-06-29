@@ -40,8 +40,10 @@ class TitleMenu extends Game {
     else if (pin === 1) {
       this.end(new GAMES[this.state.selected].game(this.io, this.buttons, this.leds));
       return;
+    } else {
+      play('assets/sound/button62.mp3');
+      return;
     }
-    else return;
 
     if (this.state.selected === -1) this.state.selected = GAMES.length - 1;
     else if (this.state.selected >= GAMES.length) this.state.selected = 0;
