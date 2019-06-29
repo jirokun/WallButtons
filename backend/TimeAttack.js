@@ -1,11 +1,10 @@
 const Game = require('./Game.js');
-const { wait, play } = require('./util.js');
+const { wait, play, playBgm } = require('./util.js');
 const GAME_TIME = 30; // seconds
 
 class TimeAttack extends Game {
   constructor(io, buttons, leds) {
     super(io, buttons, leds);
-    this.bgmFile = 'assets/bgm/tw045_volume.mp3';
     this.state = {
       remainSeconds: GAME_TIME,
       score: 0,
@@ -14,7 +13,12 @@ class TimeAttack extends Game {
     };
   }
 
-  init() {
+  async init() {
+    await wait(1000);
+    await play('assets/sound/info-girl1-youi2.mp3');
+    await wait(1000);
+    play('assets/sound/info-girl1-don1.mp3');
+    playBgm('assets/bgm/tw045_volume.mp3');
     this.getLedPin(this.state.nextIndex).digitalWrite(1);
     this.startTime = new Date().getTime();
     this.seconds = 0;
@@ -24,13 +28,14 @@ class TimeAttack extends Game {
       const remainSeconds = GAME_TIME - seconds;
       if (this.seconds !== seconds) {
         if (GAME_TIME === seconds) {
-          play('assets/sound/info-girl1-zero1.mp3');
-          clearInterval(this.timer);
           this.clearLeds();
           this.state.remainSeconds = remainSeconds;
           this.state.mode = 'SHOW_SCORE';
           this.stopBgm();
           this.emitState();
+          clearInterval(this.timer);
+          await play('assets/sound/info-girl1-zero1.mp3');
+          await play('assets/sound/info-girl1-sokomade1.mp3');
           await wait(500);
           await play('assets/sound/jingle-jazz.mp3');
           await this.waitForAnyButtonPushed();

@@ -35,6 +35,8 @@ class Game {
     this.resolve(nextGame);
   }
   async playBgm() {
+    // bgmFileが指定されていない場合は再生しない
+    if (!this.bgmFile) return;
     while (this.isBgmContinue) {
       await playBgm(this.bgmFile);
     }
