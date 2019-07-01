@@ -30,7 +30,7 @@ SWITCH_PINS.forEach((pin, index) => {
     pullUpDown: Gpio.PUD_UP,
     alert: true
   });
-  button.glitchFilter(10000);
+  button.glitchFilter(20000);
   button.on("alert", onChange(index));
   buttons.push(button);
   console.log(`SETUP ${pin}`);
