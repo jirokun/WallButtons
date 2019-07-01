@@ -3,6 +3,7 @@
     <title-menu v-if="game === 'TitleMenu'" :socket="socket"/>
     <time-attack v-else-if="game === 'TimeAttack'" :socket="socket"/>
     <debug v-else-if="game === 'Debug'" :socket="socket"/>
+    <exit v-else-if="game === 'Exit'" :socket="socket"/>
   </div>
 </template>
 
@@ -10,13 +11,15 @@
 import TitleMenu from '~/components/TitleMenu.vue'
 import TimeAttack from '~/components/TimeAttack.vue'
 import Debug from '~/components/Debug.vue'
+import Exit from '~/components/Exit.vue'
 import io from 'socket.io-client'
 
 export default {
   components: {
     TitleMenu,
     TimeAttack,
-    Debug
+    Debug,
+    Exit
   },
   mounted() {
     this._socket = io('http://192.168.1.111:3000')
