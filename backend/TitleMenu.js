@@ -1,6 +1,7 @@
 const Game = require('./Game.js');
 const TimeAttack = require('./TimeAttack.js');
 const Debug = require('./Debug.js');
+const AudioSetting = require('./AudioSetting.js');
 const Exit = require('./Exit.js');
 const { play } = require('./util.js');
 
@@ -8,7 +9,8 @@ const GAME_TIME = 5; // seconds
 const GAMES = [
   { game: TimeAttack, title: 'タイムアタック' },
   { game: Debug, title: 'デバッグ用' },
-  { game: Exit, title: 'ゲームの終了' },
+  { game: AudioSetting, title: 'おんりょうせってい' },
+  { game: Exit, title: 'しゅうりょう' },
 ];
 
 class TitleMenu extends Game {

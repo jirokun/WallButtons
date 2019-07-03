@@ -19,7 +19,6 @@ class Exit extends Game {
       this.getLedPin(1).digitalWrite(this.startLedState);
       this.getLedPin(2).digitalWrite(this.startLedState);
     }, 1000);
-    clearInterval(this.ledTimer);
   }
 
   destroy() {
