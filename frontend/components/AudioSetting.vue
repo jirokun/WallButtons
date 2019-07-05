@@ -5,7 +5,9 @@
     </v-flex>
     <v-flex xs8>
       <h1 class="display-3">おとのおおきさ ちょうせつ</h1>
-      <h2 v-if="volume !== null">{{ volume }}%</h2>
+      <div>
+      <h2 v-if="volume !== null" :style="{backgroundColor: '#88f', width: `${volume}%`}">{{ volume }}%</h2>
+      </div>
     </v-flex>
   </v-layout>
 </template>

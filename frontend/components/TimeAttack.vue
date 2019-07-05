@@ -1,24 +1,27 @@
 <template>
   <v-layout row wrap>
     <v-flex xs3>
-      <img src="/img/dance_yorokobi_mai_woman.png" class="charactor">
+      <img src="/img/dance_yorokobi_mai_woman.png" class="charactor" />
     </v-flex>
     <v-flex xs9>
       <div>
         のこり じかん:
         <span class="time">{{ remainSeconds }}</span>
       </div>
-      <div>てんすう</div>
+      <div>
+        てんすう:
+        <span class="score">{{ score }}</span>
+      </div>
       <table class="score-table">
         <tbody>
           <tr>
-            <th/>
+            <th />
             <th v-for="h in 10" v-bind:key="`horizontal-${h}`">{{ h }}</th>
           </tr>
           <tr v-for="v in 10" v-bind:key="`vertical-${v}`">
             <th>{{ (v - 1) * 10 }}</th>
             <td v-for="h in 10" v-bind:key="`horizontal-${h}`">
-              <img v-if="(v - 1) * 10 + h <= score" src="/img/star-35788_640.png">
+              <img v-if="(v - 1) * 10 + h <= score" src="/img/star-35788_640.png" />
             </td>
           </tr>
         </tbody>
@@ -86,7 +89,8 @@ th {
 * {
   font-size: 30pt;
 }
-.time {
+.time,
+.score {
   font-size: 50px;
   font-weight: bold;
 }
