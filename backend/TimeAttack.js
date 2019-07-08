@@ -1,6 +1,6 @@
 const Game = require('./Game.js');
 const { wait, play, playBgm } = require('./util.js');
-const GAME_TIME = 3; // seconds
+const GAME_TIME = 30; // seconds
 
 class TimeAttack extends Game {
   constructor(io, buttons, leds) {
@@ -38,7 +38,8 @@ class TimeAttack extends Game {
           await play('assets/sound/info-girl1-sokomade1.mp3');
           await wait(500);
           await play('assets/sound/jingle-jazz.mp3');
-          playBgm('assets/bgm/madobe.mp3');
+          this.bgmFile = 'assets/bgm/何を作っているのかな？_volume.mp3';
+          this.playBgm();
           await this.waitForAnyButtonPushed();
           this.end();
         }
