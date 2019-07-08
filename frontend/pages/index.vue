@@ -25,8 +25,7 @@ export default {
     Exit
   },
   mounted() {
-    console.log(Audio)
-    this._socket = io('http://192.168.1.111:3000')
+    this.socket = io('http://192.168.1.111:3000')
     this.socket.on('game', this.onGameChange)
     document.addEventListener('keydown', this.onKeydown)
   },
@@ -37,12 +36,8 @@ export default {
 
   data() {
     return {
+      socket: null,
       game: null
-    }
-  },
-  computed: {
-    socket() {
-      return this._socket
     }
   },
   methods: {
@@ -53,7 +48,6 @@ export default {
       this.socket.emit('keydown', index)
     },
     onGameChange(game) {
-      console.log(game)
       this.game = game
     }
   }
