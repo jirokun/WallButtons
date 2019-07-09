@@ -1,11 +1,12 @@
-const { playBgm, stopBgm } = require("./util.js");
+const mp3Player = require('play-sound')(opts = { player: 'mpg123' })
+const wavPlayer = require('play-sound')(opts = { player: 'aplay' })
 
 class Game {
   constructor(io, buttons, leds) {
     this.io = io;
     this.bgmFile = null;
-    this.bgmPlayerProcess = null;
-    this.isBgmContinue = true;
+    this.bgmProcess = null;
+    this.playBgmForever = false;
     this.buttons = buttons;
     this.leds = leds;
     this.clearLeds();
@@ -21,7 +22,6 @@ class Game {
     }
   }
   async start() {
-    this.playBgm();
     this.emitState();
     return new Promise(resolve => {
       this.init();
@@ -34,20 +34,36 @@ class Game {
   end(nextGame = null) {
     this.resolve(nextGame);
   }
-  async playBgm() {
-    // bgmFileが指定されていない場合は再生しない
-    if (!this.bgmFile) return;
-    this.isBgmContinue = true;
-    while (this.isBgmContinue) {
-      await playBgm(this.bgmFile);
-    }
-  }
   destroy() {
     this.stopBgm();
   }
+  async playBgm(fname) {
+    this.playBgmForever = true;
+    while (this.playBgmForever) {
+      await this.play(fname, true);
+    }
+  }
   stopBgm() {
-    stopBgm();
-    this.isBgmContinue = false;
+  }
+  async play(fname, bgm = false) {
+    return new Promise(resolve => {
+      let proc;
+      if (fname.match(/\.wav$/)) {
+        proc = wavPlayer.play(fname, () => {
+          resolve();
+        });
+      } else {
+        proc = mp3Player.play(fname, () => {
+          resolve();
+        });
+      }
+      if (bgm) this.bgmProcess = proc;
+    });
+  }
+  stopBgm() {
+    this.playBgmForever = false;
+    if (this.bgmProcess) this.bgmProcess.kill();
+    this.bgmProcess = null;
   }
   async waitForAnyButtonPushed() {
     return new Promise(resolve => {

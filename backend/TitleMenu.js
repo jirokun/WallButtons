@@ -3,7 +3,6 @@ const TimeAttack = require('./TimeAttack.js');
 const Debug = require('./Debug.js');
 const AudioSetting = require('./AudioSetting.js');
 const Exit = require('./Exit.js');
-const { play } = require('./util.js');
 
 const GAME_TIME = 5; // seconds
 const GAMES = [
@@ -16,13 +15,13 @@ const GAMES = [
 class TitleMenu extends Game {
   constructor(io, buttons, leds) {
     super(io, buttons, leds);
-    this.bgmFile = 'assets/bgm/game_maoudamashii_5_town15_volume.mp3';
     this.state = {
       selected: 0,
       games: GAMES
     };
   }
   init() {
+    this.playBgm('assets/bgm/game_maoudamashii_5_town15_volume.mp3');
     this.startLedState = 0;
     this.ledTimer = setInterval(() => {
       this.startLedState = this.startLedState === 0 ? 1 : 0;
@@ -45,14 +44,14 @@ class TitleMenu extends Game {
       this.end(new GAMES[this.state.selected].game(this.io, this.buttons, this.leds));
       return;
     } else {
-      play('assets/sound/button62.mp3');
+      this.play('assets/sound/button62.mp3');
       return;
     }
 
     if (this.state.selected === -1) this.state.selected = GAMES.length - 1;
     else if (this.state.selected >= GAMES.length) this.state.selected = 0;
 
-    play('assets/sound/button25.wav');
+    this.play('assets/sound/button25.wav');
     this.emitState();
   }
 }

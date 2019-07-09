@@ -1,17 +1,16 @@
 const Game = require('./Game.js');
 const TimeAttack = require('./TimeAttack.js');
-const { play } = require('./util.js');
 
 class Debug extends Game {
   constructor(io, buttons, leds) {
     super(io, buttons, leds);
-    this.bgmFile = 'assets/bgm/dozikkomarch_volume.mp3';
     this.state = {
       enabledLedPinIndex: 0,
       pushedPinIndex: null
     };
   }
   init() {
+    this.playBgm('assets/bgm/dozikkomarch_volume.mp3');
     this.state.enabledLedPinIndex = 0;
     this.ledTimer = setInterval(() => {
       const oldLed = this.getLedPin(this.state.enabledLedPinIndex++);
@@ -29,7 +28,7 @@ class Debug extends Game {
   }
 
   onPushed(pin) {
-    play('assets/sound/button25.wav');
+    this.play('assets/sound/button25.wav');
     if (this.state.pushedPinIndex === 0 && pin === 0) {
       this.end();
     } else {
