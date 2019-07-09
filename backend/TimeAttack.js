@@ -1,6 +1,6 @@
 const Game = require('./Game.js');
 const { wait } = require('./util.js');
-const GAME_TIME = 3; // seconds
+const GAME_TIME = 30; // seconds
 
 class TimeAttack extends Game {
   /** コンストラクタ */
@@ -39,7 +39,8 @@ class TimeAttack extends Game {
     const seconds = parseInt((now - this.startTime) / 1000);
     const remainSeconds = GAME_TIME - seconds;
     if (this.seconds !== seconds) {
-      if (GAME_TIME <= seconds || seconds < 0) {
+      // 残り時間が0になった、または時刻がntpのせいでずれ残り時間がマイナスあるいはゲーム時間よりも多くなった場合は終了する
+      if (remainSeconds === 0 || remainSeconds < 0 || remainSeconds > GAME_TIME) {
         this.clearLeds();
         this.state.remainSeconds = remainSeconds;
         this.state.mode = 'SHOW_SCORE';
@@ -53,7 +54,6 @@ class TimeAttack extends Game {
         this.playBgm('assets/bgm/何を作っているのかな？_volume.mp3');
         await this.waitForAnyButtonPushed();
         this.end();
-        return;
       }
       if (remainSeconds === 10) this.play('assets/sound/info-girl1-zyuu1.mp3');
       if (remainSeconds === 9) this.play('assets/sound/info-girl1-kyuu1.mp3');
