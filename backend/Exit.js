@@ -1,7 +1,6 @@
 const exec = require('child_process').exec;
 const Game = require('./Game.js');
 const TitleMenu = require('./TitleMenu.js');
-const { play } = require('./util.js');
 
 class Exit extends Game {
   constructor(io, buttons, leds) {
@@ -11,7 +10,7 @@ class Exit extends Game {
     };
   }
   init() {
-    play('assets/sound/info-girl1-areremouowaccyauno1.mp3');
+    this.play('assets/sound/info-girl1-areremouowaccyauno1.mp3');
     this.startLedState = 0;
     this.ledTimer = setInterval(() => {
       this.startLedState = this.startLedState === 0 ? 1 : 0;
@@ -31,22 +30,22 @@ class Exit extends Game {
       this.state.selected++;
       if (this.state.selected === 2) this.state.selected = 0;
       this.emitState();
-      play('assets/sound/button25.wav');
+      this.play('assets/sound/button25.wav');
     } else if (pin === 0) {
       this.state.selected--;
       if (this.state.selected === -1) this.state.selected = 1;
       this.emitState();
-      play('assets/sound/button25.wav');
+      this.play('assets/sound/button25.wav');
     } else if (pin === 1) {
       if (this.state.selected === 0) {
         this.end();
       } else {
-        await play('assets/sound/info-girl1-syuuryoushimasu1.mp3');
+        await this.play('assets/sound/info-girl1-syuuryoushimasu1.mp3');
         exec('/sbin/halt');
       }
       return;
     } else {
-      play('assets/sound/button62.mp3');
+      this.play('assets/sound/button62.mp3');
     }
   }
 }
