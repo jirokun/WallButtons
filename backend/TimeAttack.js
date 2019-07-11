@@ -51,6 +51,8 @@ class TimeAttack extends Game {
         await this.play('assets/sound/info-girl1-sokomade1.mp3');
         await wait(500);
         await this.play('assets/sound/jingle-jazz.mp3');
+        await wait(500);
+        await this.readScore(this.state.score);
         this.playBgm('assets/bgm/何を作っているのかな？_volume.mp3');
         await this.waitForAnyButtonPushed();
         this.end();
@@ -69,6 +71,32 @@ class TimeAttack extends Game {
       this.state.remainSeconds = GAME_TIME - seconds;
       this.emitState();
     }
+  }
+
+  async readScore(score) {
+    const juu = parseInt(score / 10);
+    const ichi = score % 10;
+    if (juu === 1) await this.play('assets/sound/info-girl1-zyuu2.mp3');
+    if (juu === 2) await this.play('assets/sound/info-girl1-nizyuu2.mp3');
+    if (juu === 3) await this.play('assets/sound/info-girl1-sanzyuu1.mp3');
+    if (juu === 4) await this.play('assets/sound/info-girl1-yonzyuu1.mp3');
+    if (juu === 5) await this.play('assets/sound/info-girl1-gozyuu2.mp3');
+    if (juu === 6) await this.play('assets/sound/info-girl1-rokuzyuu2.mp3');
+    if (juu === 7) await this.play('assets/sound/info-girl1-nanazyuu1.mp3');
+    if (juu === 8) await this.play('assets/sound/info-girl1-hachizyuu2.mp3');
+    if (juu === 9) await this.play('assets/sound/info-girl1-kyuuzyuu1.mp3');
+
+    if (ichi === 1) await this.play('assets/sound/info-girl1-ichi1.mp3');
+    if (ichi === 2) await this.play('assets/sound/info-girl1-ni1.mp3');
+    if (ichi === 3) await this.play('assets/sound/info-girl1-san1.mp3');
+    if (ichi === 4) await this.play('assets/sound/info-girl1-yon1.mp3');
+    if (ichi === 5) await this.play('assets/sound/info-girl1-go1.mp3');
+    if (ichi === 6) await this.play('assets/sound/info-girl1-roku1.mp3');
+    if (ichi === 7) await this.play('assets/sound/info-girl1-nana1.mp3');
+    if (ichi === 8) await this.play('assets/sound/info-girl1-hachi1.mp3');
+    if (ichi === 9) await this.play('assets/sound/info-girl1-kyuu1.mp3');
+
+    await this.play('assets/sound/info-girl1-ten2.mp3');
   }
 
   /** ボタンが押されたときの処理 */
