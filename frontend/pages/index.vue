@@ -25,7 +25,8 @@ export default {
     Exit
   },
   mounted() {
-    this.socket = io('http://192.168.1.111:3000')
+    const url = `${location.protocol}//${location.host}`;
+    this.socket = io(url);
     this.socket.on('game', this.onGameChange)
     document.addEventListener('keydown', this.onKeydown)
   },

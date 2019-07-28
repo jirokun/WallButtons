@@ -1,7 +1,20 @@
 # 自作した壁ボタンコントローラのためのプロジェクト
 
+# セットアップ
+
+```
+git clone https://github.com/jirokun/WallButtons.git
+sudo apt-get update
+sudo apt-get install -y nodejs npm
+sudo npm cache clean
+sudo npm install n -g
+sudo n stable
+cd WallButtons/backend/
+npm install
+```
+
 # ALSAの設定
-ALSAでmixwerを使用するように設定しないと、同時に複数の音を出すことができない。
+usbオーディオを使う場合にはALSAでmixwerを使用するように設定しないと、同時に複数の音を出すことができない。
 そこで、~/.asoundrcを下記のように書き換え、mixerを利用する。
 
 ```
@@ -36,3 +49,4 @@ pcm.dmixer {
   }
 }
 ```
+
