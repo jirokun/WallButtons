@@ -7,7 +7,7 @@ const player = require('play-sound')(opts = { player: 'mpg123' })
 const TitleMenu = require('./TitleMenu.js');
 
 const LED_PINS = [22, 2, 10, 3, 9, 4, 11, 17, 0, 27];
-const SWITCH_PINS = [7, 16, 1, 12, 8, 24, 15, 25, 18, 23];
+const SWITCH_PINS = [7, 16, 1, 12, 8, 24, 13, 25, 18, 23];
 const buttons = [];
 const leds = [];
 
