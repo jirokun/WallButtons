@@ -8,12 +8,12 @@ update:
 
 .PHONY: deploy
 deploy: frontend/dist
-	@cp -ar frontend/dist backend/public
+	@cp -r frontend/dist backend/public
 
 frontend/dist:
 	@cd frontend && npm run-script build
 
 .PHONY: clean
 clean:
-	@rm -fr backend/public/*
+	@rm -fr backend/public
 	@rm -fr frontend/dist
