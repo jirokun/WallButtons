@@ -11,9 +11,6 @@
           :key="game.title"
           :class="{selected: selected === index}"
         >
-          <v-list-tile-avatar>
-            <v-icon x-large>alarm</v-icon>
-          </v-list-tile-avatar>
           <v-list-tile-content class="display-2">{{ game.title }}</v-list-tile-content>
         </v-list-tile>
       </v-list>
