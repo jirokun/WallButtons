@@ -1,15 +1,15 @@
-const Game = require('./Game.js');
-const TimeAttack = require('./TimeAttack.js');
-const Debug = require('./Debug.js');
-const AudioSetting = require('./AudioSetting.js');
-const Exit = require('./Exit.js');
+const Game = require("./Game.js");
+const TimeAttack = require("./TimeAttack.js");
+const Debug = require("./Debug.js");
+const AudioSetting = require("./AudioSetting.js");
+const Exit = require("./Exit.js");
 
 const GAME_TIME = 5; // seconds
 const GAMES = [
-  { game: TimeAttack, title: 'タイムアタック' },
-  { game: Debug, title: 'デバッグ用' },
-  { game: AudioSetting, title: 'おんりょうせってい' },
-  { game: Exit, title: 'しゅうりょう' },
+  { game: TimeAttack, title: "タイムアタック" },
+  { game: Debug, title: "デバッグ用" },
+  //{ game: AudioSetting, title: 'おんりょうせってい' },
+  { game: Exit, title: "しゅうりょう" }
 ];
 
 class TitleMenu extends Game {
@@ -21,7 +21,7 @@ class TitleMenu extends Game {
     };
   }
   init() {
-    this.playBgm('assets/bgm/game_maoudamashii_5_town15_volume.mp3');
+    this.playBgm("assets/bgm/game_maoudamashii_5_town15_volume.mp3");
     this.startLedState = 0;
     this.ledTimer = setInterval(() => {
       this.startLedState = this.startLedState === 0 ? 1 : 0;
@@ -41,17 +41,19 @@ class TitleMenu extends Game {
     if (pin === 2) this.state.selected++;
     else if (pin === 0) this.state.selected--;
     else if (pin === 1) {
-      this.end(new GAMES[this.state.selected].game(this.io, this.buttons, this.leds));
+      this.end(
+        new GAMES[this.state.selected].game(this.io, this.buttons, this.leds)
+      );
       return;
     } else {
-      this.play('assets/sound/button62.mp3');
+      this.play("assets/sound/button62.mp3");
       return;
     }
 
     if (this.state.selected === -1) this.state.selected = GAMES.length - 1;
     else if (this.state.selected >= GAMES.length) this.state.selected = 0;
 
-    this.play('assets/sound/button25.wav');
+    this.play("assets/sound/button25.wav");
     this.emitState();
   }
 }
